@@ -14,8 +14,8 @@ dp = Dispatcher(bot, storage=storage)
 @dp.message_handler(CommandStart())
 async def bot_start(message: types.Message):
     print(message.from_user.id)
-    await message.answer(f"Hi, {message.from_user.full_name}!"
-                         f"Please fill form: http://192.168.68.104:5000/")
+    await message.answer(f"Hi, {message.from_user.full_name}!\n"
+                         f"Please fill form: http://176.119.157.206:5000/")
 
 
 @dp.message_handler(state=None)
