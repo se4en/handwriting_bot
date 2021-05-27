@@ -9,6 +9,9 @@ import torch.nn as nn
 from torch.distributions import bernoulli, uniform
 from utils import plot_stroke
 
+class Global:
+    train_mean = 0.0
+    train_std = 1.0
 
 def stable_softmax(X, dim=2):
     max_vec = torch.max(X, dim, keepdim=True)
@@ -288,7 +291,7 @@ def generate_sequence(
         prime=prime,
     )
 
-    length = len(text_mask.nonzero())
+    # length = len(text_mask.nonzero())
 
     if is_map:
         phi = torch.cat(model._phi, dim=1).cpu().numpy()
@@ -393,16 +396,14 @@ class HandwritingDataset(Dataset):
             self.mask = mask[:n_train]
             self.texts = inp_text[:n_train]
             self.char_mask = char_mask[:n_train]
-            0, 1, self.dataset = train_offset_normalization(
-                self.dataset)
+            Global.train_mean, Global.train_std, self.dataset = train_offset_normalization(self.dataset)
 
         elif split == 'valid':
             self.dataset = data[n_train:]
             self.mask = mask[n_train:]
             self.texts = inp_text[n_train:]
             self.char_mask = char_mask[n_train:]
-            self.dataset = valid_offset_normalization(
-                0, 1, self.dataset)
+            self.dataset = valid_offset_normalization(Global.train_mean, Global.train_std, self.dataset)
 
     def __len__(self):
         return self.dataset.shape[0]

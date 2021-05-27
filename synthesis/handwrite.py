@@ -1,8 +1,10 @@
-from handwriting_synthesis.handwriting_synthesis import *
+from synthesis.handwriting_synthesis.handwriting_synthesis import *
+import numpy as np
 
 def handwrite(user_name, user_text):
-
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    np.warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning)
+    #device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    device = "cpu"
 
     #эти данные не меняются
     data_path = './synthesis/data/'
@@ -33,3 +35,4 @@ def handwrite(user_name, user_text):
     gen_seq = data_denormalization(mean, std, gen_seq)
 
     plot_stroke(gen_seq[0], save_file)
+    return save_file
