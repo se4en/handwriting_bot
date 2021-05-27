@@ -15,8 +15,7 @@ import stat
 import base64
 import uuid
 import numpy as np
-from app.priming import generate_handwriting
-from app.xml_parser import svg_xml_parser, path_to_stroke, path_string_to_stroke
+from app.xml_parser import path_string_to_stroke
 
 
 # sys.path.append("../")
@@ -35,19 +34,16 @@ def submit_style_data():
     data = request.get_json()
     path = data["path"]
     text = data["text"]
+    user_name = data["name"]
     if path == "":
         return jsonify(
             dict({"redirect": url_for("draw"), "message": "Please enter some style"})
         )
 
-    id = str(uuid.uuid4())
-    session["id"] = id
-    tmp_dir = os.path.join(flask_app.root_path, "static", "uploads", id)
-    if not os.path.exists(tmp_dir):
-        os.makedirs(tmp_dir)
+    data_dir = "app/user_data"
+    # here we need use file name for this user !!!
+    #user_name = "user_1"
 
-    os.chmod(tmp_dir, 0o777)
-    print(tmp_dir)
     # user agent info
     user_agent = request.user_agent
     print(user_agent.string)
@@ -58,7 +54,8 @@ def submit_style_data():
     if user_agent.platform in phones:
         down_sample = False
 
-    text_path = os.path.join(tmp_dir, "inpText.txt")
+    # save user text
+    text_path = os.path.join(data_dir, user_name + ".txt")
     print(text_path)
     with open(text_path, "w") as f:
         f.write(text)
@@ -68,14 +65,12 @@ def submit_style_data():
         path, str_len=len(list(text)), down_sample=down_sample
     )
 
-    # here we need use file name for this user !
-    save_path = os.path.join(tmp_dir, "style.npy")
+    # save user stroke
+    save_path = os.path.join(data_dir, user_name + ".npy")
     np.save(save_path, stroke, allow_pickle=True)
     print(save_path)
 
-    # plot the sequence
-    #
-    # here we need use file name for this user also !
-    plot_stroke(stroke.astype(np.float32), os.path.join(tmp_dir, "original.png"))
+    # save user plot
+    plot_stroke(stroke.astype(np.float32), os.path.join(data_dir, user_name + ".png"))
 
-    return jsonify(dict({"redirect": url_for("generate"), "message": ""}))
+    return jsonify(dict({"redirect": url_for("draw"), "message": ""}))

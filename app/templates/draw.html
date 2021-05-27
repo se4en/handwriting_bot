@@ -1,6 +1,3 @@
-{% extends "base.html" %}
-
-{% block content %}
 <!doctype html>
 <html lang="en">
     <head>
@@ -34,7 +31,13 @@
    <body>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>  
         <div class="conatiner" style="width: 100%; height: 100%;">
-            <form name="form" onsubmit="return false;">
+            <form name="form_1" onsubmit="return false;">
+                <div class="form-group">
+                    <input id="tg_name" type="text" class="form-control" name="tg_name" placeholder="write telegram nickname..." onkeypress="return onenter()">
+                    <p id="message" style="color:rgb(230, 53, 53);"></p>
+                </div>
+            </form>
+            <form name="form_2" onsubmit="return false;">
                 <div class="form-group">
                     <input id="text1" type="text" class="form-control" name="text" placeholder="write some text..." onkeypress="return onenter()">
                     <p id="message" style="color:rgb(230, 53, 53);"></p> 
@@ -120,9 +123,14 @@
                 //get svg element.
                 var svg = document.getElementById("svg1");
                 var path = svg.getElementById('path1').getAttributeNS(null, 'd');
-                var text = document.forms["form"]["text1"].value;
+                var name = document.forms["form_1"]["tg_name"].value;
                 console.log(path);
-                if (text === "") {
+                var text = document.forms["form_2"]["text1"].value;
+                console.log(path);
+                if (name === "") {
+                    document.getElementById("message").innerHTML = "Please enter telegram nickname.";
+                }
+                else if (text === "") {
                     document.getElementById("message").innerHTML = "Please enter some text.";
                 }
                 else{
@@ -130,7 +138,7 @@
                         type: "POST",
                         url: "/upload_style",
                         contentType: "application/json",
-                        data: JSON.stringify({"path": path, "text":text}),
+                        data: JSON.stringify({"path": path, "text":text, "name":name}),
                         dataType: "json",
                         success: function(response) {
                             if (response.message == ''){
@@ -151,4 +159,3 @@
         </script>
    </body>
 </html>
-{% endblock %}
