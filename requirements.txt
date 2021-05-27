@@ -1,8 +1,8 @@
 aiogram
-environs~=8.0.0
 numpy
 Flask
 gunicorn==20.0.4
 matplotlib
 torch
 torchvision
+environs
