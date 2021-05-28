@@ -28,7 +28,7 @@ async def bot_echo(message: types.Message):
 
     # проверяем на наличие файла с почерком
     if npy_file in os.listdir('./app/user_data/') and txt_file in os.listdir('./app/user_data/'):
-        res_file = handwrite(user_nick, user_text=message.text) + ".png"
+        res_file = handwrite(user_nick, user_text=message.text.lower()) + ".png"
         await bot.send_photo(message.from_user.id, photo=open(res_file, "rb"),
                              reply_to_message_id=message.message_id)
     else:
