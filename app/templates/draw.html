@@ -115,6 +115,16 @@
             </div>
         </div>
         <script type="text/javascript">
+            function GetURLParameter(sParam) {
+                var sPageURL = window.location.search.substring(1);
+                var sURLVariables = sPageURL.split('&');
+                for (var i = 0; i < sURLVariables.length; i++) {
+                    var sParameterName = sURLVariables[i].split('=');
+                    if (sParameterName[0] == sParam) {
+                        return sParameterName[1];
+                    }
+                }
+            }
             function clearSvg(){
                 var svg = document.getElementById("svg1");
                 svg.getElementById('path1').setAttributeNS(null, 'd', "");
@@ -123,14 +133,16 @@
                 //get svg element.
                 var svg = document.getElementById("svg1");
                 var path = svg.getElementById('path1').getAttributeNS(null, 'd');
-                var name = document.forms["form_1"]["tg_name"].value;
+                //var name = document.forms["form_1"]["tg_name"].value;
                 console.log(path);
                 var text = document.forms["form_2"]["text1"].value;
                 console.log(path);
-                if (name === "") {
-                    document.getElementById("message").innerHTML = "Please enter telegram nickname.";
-                }
-                else if (text === "") {
+                //if (name === "") {
+                //    document.getElementById("message").innerHTML = "Please enter telegram nickname.";
+                //}
+                var name = GetURLParameter("name");
+
+                if (text === "") {
                     document.getElementById("message").innerHTML = "Please enter some text.";
                 }
                 else{

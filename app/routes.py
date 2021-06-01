@@ -22,12 +22,14 @@ from app.xml_parser import path_string_to_stroke
 from utils import plot_stroke
 
 
-@flask_app.route("/", methods=["GET"])
+@flask_app.route("/", methods=["GET", "POST"])
 def draw():
     if "id" in session:
         id = session["id"]
         print("uuid: ", id)
-    return render_template("draw.html", title="Write")
+    name = request.args.get('name')
+    return render_template("draw.html", title="Write", name=name)
+
 
 @flask_app.route("/upload_style", methods=["GET", "POST"])
 def submit_style_data():
